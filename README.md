@@ -36,6 +36,55 @@ TObjectPtr<APlayerCameraManager> PlayerCameraManager;
 ![인풋확인](images/Enhanced_Input.png)
 
 
-# Player Move 구현
+# 이동
 
+현재 위치에 방향(단위 벡터) * 속도 의 값을 더해 구현한다.
+```
+void MyPawn::Move()
+{
+	FVector newLocation = direction * moveSpeed * deltaTime + GetActorLocation();
+	SetActorLocation(newLocation);
+}
+```
+
+참고) Actor의 SetActorLocation 함수
+```
+bool AActor::SetActorLocation(const FVector& NewLocation, bool bSweep, FHitResult* OutSweepHitResult, ETeleportType Teleport)
+{
+	if (RootComponent)
+	{
+		const FVector Delta = NewLocation - GetActorLocation();
+		return RootComponent->MoveComponent(Delta, GetActorQuat(), bSweep, OutSweepHitResult, MOVECOMP_NoFlags, Teleport);
+	}
+	else if (OutSweepHitResult)
+	{
+		*OutSweepHitResult = FHitResult();
+	}
+
+	return false;
+}
+```
 ![간단한움직임](images/Simple_Move.png)
+
+# 생성
+
+Actor를 생성하기 위해서는 World에서 SpawnActor 함수를 사용해야 한다.
+
+```
+/* SpawnActor 함수
+ * Spawn Actors with given transform and SpawnParameters
+ * 
+ * @param	Class					Class to Spawn
+ * @param	Location				Location To Spawn
+ * @param	Rotation				Rotation To Spawn
+ * @param	SpawnParameters			Spawn Parameters
+ *
+ * @return	Actor that just spawned
+*/
+
+GetWorld()->SpawnActor( ... );
+```
+
+BluePrint에서는 SpawnActor BP class 를통해 생성하며 생성할 클래스와 위치 등을 설정할 수 있다.
+
+![간단한움직임](images/SpawnActorBP.png)
