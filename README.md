@@ -127,3 +127,45 @@ AMyPawn::AMyPawn()
 블루프린트에서 컴포넌트를 추가
 
 ![컴포넌트추가](images/Components.png)
+
+
+# Array를 이용한 랜덤위치 스폰
+
+Variables에 Component를 변수로 저장할 수 있으며, 배열로 여러개를 저장할 수 있다.
+
+```
+//c++를 통해 불러오는 방법으로는
+//GetComponents<T>(output) 함수가 있다.
+//헤더에 선언된 배열
+TArray<UArrowComponent> ArrowComponents;
+
+//초기화 및 액터 내   UArrowComponent를 불러온다.
+AMyPawn::BeginPlay()
+{
+	SpawnDelay = 0.5f;
+	CurrentTime = 5.0f; // spawn after 5sec
+	GetComponents<UArrowComponent>(ArrowComponents);
+}
+
+//매틱 시간차를 구해 0.5초마다 새로운 적을 생성한다.
+AMyPawn::Tick(float DeltaTime)
+{
+	CurrentTime -= DeltaTime;
+	if(CurrentTime <= 0)
+	{
+		int randIndex = FMath::RandRange(0, ArrowComponents.Num()-1);
+		GetWorld()->SpawnActor<BP_Enemy>(BP_Enemy::StaticClass(),ArrowComponents[randIndex]->GetLocation());
+		CurrentTime = SpawnDelay;
+	}
+}
+
+```
+
+
+블루프린트
+![랜덤스폰](images/RandomSpawn_BP.png)
+
+결과
+![랜덤스폰](images/RandomSpawn.png)
+
+LastUpdate 25.09.18
