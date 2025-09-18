@@ -136,6 +136,7 @@ Variables에 Component를 변수로 저장할 수 있으며, 배열로 여러개
 ```
 //c++를 통해 불러오는 방법으로는
 //GetComponents<T>(output) 함수가 있다.
+
 //헤더에 선언된 배열
 TArray<UArrowComponent> ArrowComponents;
 
@@ -158,7 +159,6 @@ AMyPawn::Tick(float DeltaTime)
 		CurrentTime = SpawnDelay;
 	}
 }
-
 ```
 
 
