@@ -117,7 +117,7 @@ UArrowComponent* Arrow;
 //AMyPawn.cpp
 AMyPawn::AMyPawn()
 {
-	//RootComponent는 Actor의 기본 컴포넌트이다.
+	//RootComponent는 Actor클래스에 포함된 컴포넌트이다.
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
