@@ -121,7 +121,7 @@ AMyPawn::AMyPawn()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
-	Arrow->SetupAttachment(RootComponent);
+	Arrow->SetupAttachment(RootComponent); //생성자에서 루트컴포넌트에 다는 함수
 }
 ```
 블루프린트에서 컴포넌트를 추가
@@ -134,33 +134,60 @@ AMyPawn::AMyPawn()
 Variables에 Component를 변수로 저장할 수 있으며, 배열로 여러개를 저장할 수 있다.
 
 ```
-//c++를 통해 불러오는 방법으로는
-//GetComponents<T>(output) 함수가 있다.
-
 //헤더에 선언된 배열
-TArray<UArrowComponent> ArrowComponents;
+TArray<UArrowComponent> Arrows;
 
-//초기화 및 액터 내   UArrowComponent를 불러온다.
-AMyPawn::BeginPlay()
+//ASpawner.cpp
+ASpawner::ASpawner()
 {
-	SpawnDelay = 0.5f;
-	CurrentTime = 5.0f; // spawn after 5sec
-	GetComponents<UArrowComponent>(ArrowComponents);
+	PrimaryActorTick.bCanEverTick = true;
+
+	//루트 생성
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	CurrentDelay = 2.0f;
+
+	// 화살표 생성
+	for (size_t i = 0; i < 5; i++)
+	{
+		FString str = "Arrow" + FString::FromInt(i);
+		UArrowComponent* Arrow = CreateDefaultSubobject<UArrowComponent>(FName(str));
+
+		//위치, 회전 설정
+		double y = 100.0 - 50.0 * i;
+		Arrow->SetRelativeLocation(FVector(0, y, 0));
+		Arrow->SetRelativeRotation(FQuat::MakeFromEuler(FVector(0, 0, 180)));
+		Arrow->SetupAttachment(RootComponent);
+
+		//TArray에 추가
+		Arrows.Add(Arrow);
+	}
+
+	//스폰 파라미터 오너설정, 충돌무시
+	SpawnParams.Owner = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 }
 
 //매틱 시간차를 구해 0.5초마다 새로운 적을 생성한다.
-AMyPawn::Tick(float DeltaTime)
+void ASpawner::Tick(float DeltaTime)
 {
-	CurrentTime -= DeltaTime;
-	if(CurrentTime <= 0)
+	Super::Tick(DeltaTime);
+	CurrentDelay -= DeltaTime;
+	
+	if (CurrentDelay <= 0)
 	{
-		int randIndex = FMath::RandRange(0, ArrowComponents.Num()-1);
-		GetWorld()->SpawnActor<BP_Enemy>(BP_Enemy::StaticClass(),ArrowComponents[randIndex]->GetLocation());
-		CurrentTime = SpawnDelay;
+		int randomIndex = FMath::RandRange(0, Arrows.Num()-1);
+		AEnemy* newEnemy = GetWorld()->SpawnActor<AEnemy>(AEnemy::StaticClass(), Arrows[randomIndex]->GetRelativeTransform());
+
+		CurrentDelay = 0.5f;
 	}
 }
-```
 
+```
+### View
+
+![cpp결과](images/SpawnActorCPP.png)
+
+---
 
 블루프린트
 ![랜덤스폰](images/RandomSpawn_BP.png)
@@ -168,4 +195,4 @@ AMyPawn::Tick(float DeltaTime)
 결과
 ![랜덤스폰](images/RandomSpawn.png)
 
-LastUpdate 25.09.18
+LastUpdate 25.09.19
