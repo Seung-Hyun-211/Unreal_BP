@@ -224,7 +224,60 @@ Collision의 설정으로 [Collision Enabled](https://dev.epicgames.com/document
 
 ![CollsionEnabled](images/CollisionEnabled.png)
 
+## C++
+```
+// Actor.h 에서 충돌이벤트
+	/** 
+	 *	Event when this actor overlaps another actor, for example a player walking into a trigger.
+	 *	For events when objects have a blocking collision, for example a player hitting a wall, see 'Hit' events.
+	 *	@note Components on both this and the other Actor must have bGenerateOverlapEvents set to true to generate overlap events.
+	 */
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "ActorBeginOverlap"), Category="Collision")
+	ENGINE_API void ReceiveActorBeginOverlap(AActor* OtherActor);
 
+//Enemy.cpp
+	AEnemy::AEnemy()
+	{
+	
+		PrimaryActorTick.bCanEverTick = true;
+
+		//박스 루트로 컴포넌트 추가
+		box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
+
+		RootComponent = box;
+		box->InitBoxExtent(FVector(50.0f, 50.0f, 50.0f));
+		//프리셋 설정
+		box->SetCollisionProfileName(TEXT("Enemy"));
+
+		//외관설정
+		BoxVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VIsualMesh"));
+		BoxVisual->SetupAttachment(RootComponent);
+		static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
+		if (CubeAsset.Succeeded())
+		{
+			BoxVisual->SetStaticMesh(CubeAsset.Object);
+			BoxVisual->SetWorldScale3D(FVector(0.8f));
+		}
+	}
+
+	void AEnemy::BeginPlay()
+	{
+		Super::BeginPlay();
+		//충돌시 호출할 함수를 연결
+		box->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlapBegin);
+	}
+
+	//충돌시 호출되는 함수
+	void AEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool 	bFromSweep, const FHitResult& SweepResult)
+	{
+		AMyPlayer* other = Cast<AMyPlayer>(OtherActor);
+		if ( other )
+		{
+			other->GetDamage(1.0f);
+		}
+	}
+```
+![CollisionCpp](images/CollisionEnemyCpp.png)
 
 ## Blueprint
 블루프린트는 매우 단순하다.<br> Event ActorBeginOverlap을 통해 캐스트를 성공할 경우 해당 클래스에 맞는 처리를 하면 된다.
