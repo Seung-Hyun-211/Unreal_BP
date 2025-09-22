@@ -198,9 +198,10 @@ void ASpawner::Tick(float DeltaTime)
 
 # Collision
 
-- 액터들간의 충돌을 발생시키는 영역
-- Box, Capsule, Sphere 총 세 가지 기본형태가 존재
-- 충돌에 대한 세 가지 반응이 존재
+- 액터들간의 충돌을 발생시키는 영역이다.
+- Box, Capsule, Sphere 총 세 가지 기본형태가 존재한다.
+- 프로젝트 설정에서 아래와 같이 추가할 수 있으며 충돌에 대한 세 가지 반응이 존재한다.
+![Collision설정](images/CollisionProjectSetting.png)
 
 |반응|설명|
 |-|-|
@@ -208,11 +209,10 @@ void ASpawner::Tick(float DeltaTime)
 |Overlap|충돌 이벤트 발생, 물리적으로는 무시|
 |Block|출돌 이벤트 발생, 물리적으로 밀어냄|
 
-서로 다른 반응을 가진 오브젝트끼리의 충돌에서는 처리가 더 적은 응답으로 충돌 처리가 발생한다.
-
-Ignore > Overlap > Block 의 우선 순위를 가지며 예를 들어 Ignore와 Overlap 혹은 Block가 부딛힐 경우 Ignore로 적용된다.
-
+서로 다른 반응을 가진 오브젝트끼리의 충돌에서는 처리가 더 적은 응답으로 충돌 처리가 발생한다.<br>
+Ignore > Overlap > Block 의 우선 순위를 가지며 예를 들어 Ignore와 Overlap 혹은 Block가 부딛힐 경우 Ignore로 적용된다.<br>
 Collision의 설정으로 [Collision Enabled](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/CollisionEnabled?application_version=5.2) 항목이 있는데 이는 감지 기능이나 물리 작용을 켜거나 끌 수 있게 해준다.
+
 |종류|설명|
 |-|-|
 |No Collision|감지와 물리 작용 모두 사용하지 않음|
@@ -223,3 +223,10 @@ Collision의 설정으로 [Collision Enabled](https://dev.epicgames.com/document
 |Query and Probe|충돌에 물리적으로 반응하지 않지만 잠재적으로 공간(레이캐스트)와 물리 모두 감지한다.|
 
 ![CollsionEnabled](images/CollisionEnabled.png)
+
+
+
+## Blueprint
+블루프린트는 매우 단순하다.<br> Event ActorBeginOverlap을 통해 캐스트를 성공할 경우 해당 클래스에 맞는 처리를 하면 된다.
+
+![Collision블루프린트](images/CollisionEnemyBP.png)
