@@ -195,4 +195,31 @@ void ASpawner::Tick(float DeltaTime)
 결과
 ![랜덤스폰](images/RandomSpawn.png)
 
-LastUpdate 25.09.19
+
+# Collision
+
+- 액터들간의 충돌을 발생시키는 영역
+- Box, Capsule, Sphere 총 세 가지 기본형태가 존재
+- 충돌에 대한 세 가지 반응이 존재
+
+|반응|설명|
+|-|-|
+|Ignore|부딪혀도 충돌했다는 이벤트를 무시|
+|Overlap|충돌 이벤트 발생, 물리적으로는 무시|
+|Block|출돌 이벤트 발생, 물리적으로 밀어냄|
+
+서로 다른 반응을 가진 오브젝트끼리의 충돌에서는 처리가 더 적은 응답으로 충돌 처리가 발생한다.
+
+Ignore > Overlap > Block 의 우선 순위를 가지며 예를 들어 Ignore와 Overlap 혹은 Block가 부딛힐 경우 Ignore로 적용된다.
+
+Collision의 설정으로 [Collision Enabled](https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/CollisionEnabled?application_version=5.2) 항목이 있는데 이는 감지 기능이나 물리 작용을 켜거나 끌 수 있게 해준다.
+|종류|설명|
+|-|-|
+|No Collision|감지와 물리 작용 모두 사용하지 않음|
+|Query Only|감지(Overlap) 기능만 동작함|
+|Physics Only|물리(Physics) 작용 기능만 동작함|
+|Collision Enabled|감지와 물리 모두 동작함|
+|Probe Only|충돌에 물리적으로 반응하지 않지만 잠재적으로 물리 상호작용을 감지하고 충돌 데이터를 전달한다.|
+|Query and Probe|충돌에 물리적으로 반응하지 않지만 잠재적으로 공간(레이캐스트)와 물리 모두 감지한다.|
+
+![CollsionEnabled](images/CollisionEnabled.png)
