@@ -30,8 +30,52 @@ auto를 사용 가능한 경우
 - Iterator (반복자) 변수의 경우.
 - template 코드에서 타입을 쉽게 식별할 수 없는 경우
 
-# Actor / Pawn / Character
+### captures 와 반환타입
 
+# Property
+- 프로퍼티 선언시 아래와 같이 사용
+```
+UPROPERTY( A, B, ... , key = value)
+Type Var;
+```
+ 
+ ### 자주 쓰이는 프로퍼티<br>([프로퍼티 지정자](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-uproperties#propertyspecifiers))
+  ```EditAnywhere``` : 에디터 패널에서 편집 가능
+  <br>```BlueprintReadWrite``` : 블루프린트에서 읽기/쓰기 가능
+  <br>```VisibleAnywhere``` : 에디터에서 값을 볼 수 있되 편집 불가능
+  <br>```BlueprintReadOnly``` : 블루프린트에서 읽기 가능
+  <br>```EditDefaultsOnly``` : 클래스 __디폴트값__ 에서만 편집 가능
+  <br>```Category = "Category"``` : 디테일 패널에서 그룹화
+
+# 문자열
+문자열 인코딩에는 `TEXT()` 매크로를 사용
+|클래스|개요|
+|-|-|
+|```FName```|- 데이터 테이블에 한 번만 저장된다.<br>- 대소문자를 구별하지 않는다.<br>- 변경할 수 없다.|
+|```FText```|- 텍스트 현지화 지원을 위한 주요 컴포넌트.<br>- 외부 API를 인터페이스에 표시하는 작업 등에 유용.|
+|```FString```|- 조작 가능한 유일한 스트링 클래스.<br>- 검색, 변경, 비교 가능하지만 그만큼 무겁다.|
+### [문자열 클래스변환](https://dev.epicgames.com/documentation/en-us/unreal-engine/string-handling-in-unreal-engine#conversions)
+
+### FName
+생성 <br>```FName TestName = FName(TEXT("TestFName"));```<br><br>
+변환 From FName<br>```TestString = TestName.ToString();```<br>```TestText = FText::FromName(TestName);```<br><br>
+변환 To FName<br>```TestName = FName(*TestString);```<br>```FText -> FString -> FName```<br><br>
+비교<br>`==` 연산자 사용 -> true/false<br>`TestName.Compare(OtherName);` 함수 사용 -> -1 / 0 / 1
+
+### FText
+텍스트 포맷, 숫자 및 시간 텍스트 생성 등에 유용<br>
+```FText::GetEmpty()``` ```FText()```를 통해 빈 FText를 만들 수 있음<br>
+
+변환<br>
+```AsCultureInvariant``` : 현지화되지 않는 FText인스턴스 생성<br>
+```FormString``` : 기존 FString 에서 FText 인스턴스 생성<br>
+```FromName``` : 기존 FName에서 FText 인스턴스 생성, FName.ToString() 출력에서 FromString 을 호출하는것과 같음
+
+비교<br>
+```EqualTo``` : true/false<br>
+```CompareTo``` : -1 / 0 / 1<br>
+
+# Actor / Pawn / Character
 |클래스|설명|
 |-|-|
 |Actor|- 레벨(월드)에 배치되거나 스폰될 수 있는 오브젝트의 기본 클래스<br>- ActorComponent의 컬렉션을 가질 수 있으며, 이를 통해 Actor가 어떻게 움직이는지, 렌더링되는지 등을 제어할 수 있다.|
@@ -39,10 +83,8 @@ auto를 사용 가능한 경우
 |Character|사람형 캐릭터 구현을 위한 Pawn으로 기본적인 Colider, Mesh, Movement를 포함하므로 점프 이동 중력 충돌등을 따로 구현하지 않아도 된다.|
 
 # Controller
-Pawn을 조종하기 위한 클래스이다.
-
-입력을 통해 Pawn을 조종하는 PlayerController, AI로직을 통해 Pawn을 조종하는 AIController 등이 있다.
-
+Pawn을 조종하기 위한 클래스이다.<br>
+입력을 통해 Pawn을 조종하는 PlayerController, AI로직을 통해 Pawn을 조종하는 AIController 등이 있다.<br>
 주로 사용하게 될 PlayerController 클래스는 아래와 같이 Player, HUD, Camera를 가지고 있어 입력에의한 Pawn 조작뿐 아니라 UI, 카메라 조작도 가능하다.
 ```
 UPROPERTY()
