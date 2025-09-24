@@ -2,6 +2,34 @@
 
     블루프린트를 이용한 언리얼학습
 
+# Unreal에서 권장하는 코딩표준
+
+### 클래스 명명규칙
+각 단어의 첫 번째 글자를 대문자로 사용<br>클래스 종류에 따른 접두사 설정<br>
+|접두사|클래스|
+|-|-|
+|T|템플릿 클래스|
+|U|UObject를 상속|
+|A|AActor를 상속|
+|S|SWidget를 상속|
+|I|Interface|
+|C|Concept|
+|E|Enum|
+|b|bool|
+|F|그 외 대부분|
+
+### nullptr
+```NULL``` 대신 ```nullptr``` 사용<br>
+
+### auto
+몇 가지 상황을 제외하고 ```auto```를 사용하지 말것<br>
+초기화 하려는 타입은 항상 명시해야 한다.
+
+auto를 사용 가능한 경우
+- 변수에 람다를 바인딩해야 하는 경우.
+- Iterator (반복자) 변수의 경우.
+- template 코드에서 타입을 쉽게 식별할 수 없는 경우
+
 # Actor / Pawn / Character
 
 |클래스|설명|
@@ -283,3 +311,28 @@ Collision의 설정으로 [Collision Enabled](https://dev.epicgames.com/document
 블루프린트는 매우 단순하다.<br> Event ActorBeginOverlap을 통해 캐스트를 성공할 경우 해당 클래스에 맞는 처리를 하면 된다.
 
 ![Collision블루프린트](images/CollisionEnemyBP.png)
+
+
+
+
+# UMG(Unreal Motion Graphics) UI
+
+## Widget
+Widget은 게임월드 내에서 상호작용하는 컴포넌트이다.<br>
+언리얼에서 UI를 출력 하기 위해서는 "Create HUD Widget"함수를 통해 Widget을 생성하고 "Add to Viewport"함수를 통해 Viewport에 연결을 해야한다.
+
+SetInputMode, Show Cursor를 통해 사용자와 UI를 통한 상호작용을 할 수 있다.
+
+위젯의 하위 객체로 다른 위젯을 추가해 중첩시키는 것도 가능하다.
+
+## BluePrint
+
+UI Widget Blueprint<br>
+![UIBlueprint](images/UIBlueprint.png)
+
+TextWidget<br>
+![TextBinding](images/TextFunctionBinding.png)
+
+GameModeBase<br>
+![UI_Gamemodebase](images/GameModeBlueprintUI.png)
+
