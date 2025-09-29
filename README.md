@@ -81,20 +81,33 @@ Type Var;
 UE_LOG(LogCategory, LogLevel, Context);
 ```
 
-# ConstructorHelper
+# ConstructorHelpers / LoadClass
 
-주로 객체 생성자에서 사용되는 구조체<br>
-FClassFinder, FObjctFinderOptional
+ConstructorHelpers : 주로 객체 생성자에서 사용되는 구조체<br>
+경로가 존재하지 않으면오류남<br>FClassFinder, FObjctFinderOptional 함수 사용
 ```
 static ConstructorHelpers::FObjectFinder<ObjName>OutObject(TEXT(" 경 로 "));
 
 if(OutObject.Succeeded()) //불러왔을 경우
-{
-
-}
-
+{...}
 ```
 
+LoadClass : 클래스가 필요한 시점에 사용되는 오브젝트 로드함수<br>
+잘못된 경우 nullptr을 반환
+```
+void AMyPlayerController::BeginPlay()
+{
+	UClass* WidgetBPClass = LoadClass<UUserWidget>(nullptr, TEXT("/Game/Level/TestWidget"));
+	if (WidgetBPClass)
+	{
+		UUserWidget* MyWidget = CreateWidget<UUserWidget>(this, WidgetBPClass);
+		if (MyWidget)
+		{
+			MyWidget->AddToViewport();
+		}
+	}
+}
+```
 # Actor / Pawn / Character
 |클래스|설명|
 |-|-|
@@ -102,6 +115,15 @@ if(OutObject.Succeeded()) //불러왔을 경우
 |Pawn|AI, Player를 조종하는 오브젝트로 Controller를 사용한다.|
 |Character|사람형 캐릭터 구현을 위한 Pawn으로 기본적인 Colider, Mesh, Movement를 포함하므로 점프 이동 중력 충돌등을 따로 구현하지 않아도 된다.|
 
+### C++에서 생성
+```
+//GameMode 내에서 > APawn < 으로 찾아 불러어야함
+static ConstructorHelpers::FClassFinder<APawn> PlayerPawn(TEXT(" 경 로 "));
+if(PlayerPawn.Class != nullptr)
+{
+	DefaultPawnClass = PlayerPawn.Class;
+}
+```
 # Controller
 Pawn을 조종하기 위한 클래스이다.<br>
 플레이어가 입장할 때 배정되며 바꿀 수 없음<br>
@@ -116,6 +138,7 @@ TObjectPtr<AHUD> MyHUD;
 
 UPROPERTY(BlueprintReadOnly, Category=PlayerController)
 TObjectPtr<APlayerCameraManager> PlayerCameraManager;
+
 ```
 ### 게임이 실행되는 순서
 1. Controller 생성
