@@ -81,6 +81,20 @@ Type Var;
 UE_LOG(LogCategory, LogLevel, Context);
 ```
 
+# ConstructorHelper
+
+주로 객체 생성자에서 사용되는 구조체<br>
+FClassFinder, FObjctFinderOptional
+```
+static ConstructorHelpers::FObjectFinder<ObjName>OutObject(TEXT(" 경 로 "));
+
+if(OutObject.Succeeded()) //불러왔을 경우
+{
+
+}
+
+```
+
 # Actor / Pawn / Character
 |클래스|설명|
 |-|-|
@@ -105,9 +119,9 @@ TObjectPtr<APlayerCameraManager> PlayerCameraManager;
 ```
 ### 게임이 실행되는 순서
 1. Controller 생성
-2. Pawn 생성
-3. PlayerController가 Pawn에 빙의
-4. 게임의 시작
+3. Pawn 생성
+4. PlayerController가 Pawn에 빙의
+5. 게임의 시작
 
 ![시작순서](images/StartGame.png)
 
@@ -130,6 +144,38 @@ void AMyPlayer::PostInitializeComponents()
 - player controller
 - input action
 - input mapping component
+
+### C++ Enhanced Input
+
+1. 생성자에서 경로를 통해 IMC, IA를 불러와야한다.
+2. BeginPlay에서 Controller에 IMC를 매핑한다.
+3. SetupPlayerInputComonent 함수를 오버라이드 하여 Input Action과 이벤트함수를 바인딩한다.
+
+```
+//생성자
+static ConstructorHelpers::FObjectFinder<InputMappingContext>MappingContext(TEXT("Game/Input/IMC_MyMappingContext"));
+if(MappingContext.Succeeded())
+{
+	DefaultIMC = MappingContext.Object;
+}
+
+//BeginPlay
+if(APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+{
+	if(UEnhancedInputLocalPlayerSubsystem* SubSystem =
+		ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		SubSystem->AddMappingContext(DefaultIMC, 0); // 0은 우선순위
+	}
+}
+
+//SetupPlayerInputComponent
+if (UEnhancedInputComponent * EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+{
+	//InputAction, TriggerEvent, TargetObject ,EventFunction
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, AMyPlayer::SetDirection);
+}
+```
 
 ![인풋확인](images/Enhanced_Input.png)
 
