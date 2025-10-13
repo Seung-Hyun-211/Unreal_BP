@@ -18,6 +18,8 @@
 |b|bool|
 |F|그 외 대부분 non-UObject타입의 실용적 의미<br>초기 엔진 코드에서 유래되었으며 Fred 라는 이름을 붙히던 관습이 굳어진것|
 
+
+
 ### nullptr
 ```NULL``` 대신 ```nullptr``` 사용<br>
 
