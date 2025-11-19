@@ -3,7 +3,7 @@
 가장 간단한 컨테이너, 요소타입, 선택적 얼로케이터(생략가능) 두 가지 프로퍼티로 정의한다.
 ```TArray<int32> IntArray;```
 
-- 초기화
+### 초기화
 ```
 IntArray.Init(10, 3);
 
@@ -21,7 +21,7 @@ StrArray.Emplace(TEXT("Text2"));
 //["Text1","Text2"]
 ```
 
-- 여러 요소 추가
+### 여러 요소 추가
 ```
 FString TempArray = {TEXT("Text3"), TEXT("Text4")};
 StrArray.Append(TempArray, ARRAY_COUNT(TempArray));
@@ -29,7 +29,7 @@ StrArray.Append(TempArray, ARRAY_COUNT(TempArray));
 //["Text1","Text2","Text3","Text4"]
 ```
 
-- 중복없이 Add
+### 중복없이 Add
 ```
 StrArray.AddUnique(TEXT("!"));
 StrArray.AddUnique(TEXT("!"));
@@ -37,19 +37,19 @@ StrArray.AddUnique(TEXT("!"));
 //["Text1","Text2","Text3","Text4","!"]
 ```
 
-- 삽입
+### 삽입
 ```
 StrArray.Insert(TEXT("Text5"), 1);
 //["Text1","Text5","Text2","Text3","Text4","!"]
 ```
 
-- 요소 숫자 설정
+### 요소 숫자 설정
 ```
 StrArray.SetNum(8);
 //["Text1","Text5","Text2","Text3","Text4","!","",""]
 ```
 
-- 정렬
+### 정렬
   <br>비교연산자 < 를 사용하여 정렬함FString은 대소문자 구분 없이 사전적으로 구분
   <br>매개변수에 함수를 넣어 사용할 수 있음
   <br>퀵정렬로 구현됨
@@ -66,7 +66,7 @@ StrArray.Sort([](const FString& A, const FString& B){ return A.Len() < B.Len(); 
 StrArray.StableSort();
 ```
 
-- 쿼리
+### 쿼리
 ```
 // Num 배열의 요소 갯수 를반환
 int 32 count = StrArray.Num();
@@ -114,7 +114,8 @@ FString* rStrPtr = StrArray.FindByKey(TEXT("r"));
 FString filter = StrArray.FilterByPredicate([](const FString& A){ return !A.IsEmpty() && A[0] < TEXT('M'); });
 ```
 
-- 제거<br>Remove 동일한 모든 요소를 제거<br>RemoveSingle 처음 일치한 요소 제거<br>RemoveAt 인덱스로 제거
+### 제거
+Remove 동일한 모든 요소를 제거<br>RemoveSingle 처음 일치한 요소 제거<br>RemoveAt 인덱스로 제거
 ```
 TArray<int32> valArr;
 int32 temp[] = {1,2,3,4,5,1,2,3,4,5};
@@ -137,7 +138,8 @@ Empty
 vallArr.Empty(); // vallArr == []
 ```
 
-- Operator<br>배열은 엄역하게 요소를 가지기 때문에 깊게 복사됨 -> 복사로 생성하는 새 배열은 자체적인 사본을 만듦<br>Append 대신 +=를 통해 붙힐 수 있음<br>MoveTemp 이동후 기존 배열은 비워버림<br> == , != 를 통해 비교연산
+### Operator
+배열은 엄역하게 요소를 가지기 때문에 깊게 복사됨 -> 복사로 생성하는 새 배열은 자체적인 사본을 만듦<br>Append 대신 +=를 통해 붙힐 수 있음<br>MoveTemp 이동후 기존 배열은 비워버림<br> == , != 를 통해 비교연산
 ```
 TArray<int32> arr1;
 arr1.Add(0);
