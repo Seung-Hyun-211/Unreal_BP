@@ -1,4 +1,4 @@
-# TMap
+# TMap, TSet
 
 ### TMap
 
@@ -118,3 +118,9 @@ numToString.Compact(); // 모든 슬랙 제거 [1,4]
 - [KeyFunction](https://dev.epicgames.com/documentation/ko-kr/unreal-engine/map-containers-in-unreal-engine#key-funcs)<br>
 BaseKeyFuncs 를 상속받으면 키를 만들어서 사용할 수 있다.<br>
 키가 가져야할 필수 스태틱 함수 ```GetSetKey```, ```Matches```, ```GetKeyHash```
+
+
+### TSet
+
+데이터 값 자체를 키로 사용하며, 오버라이드가능한 함수로 요소를 평가한다.<br>
+이외는 TMap, TMultiMap과 비슷하다.
