@@ -1,6 +1,4 @@
 ```
-#include "Engine/DataTable.h"
-
 USTRUCT(Atomic, BlueprintType)
 struct FItem : FTableRowBase //FTableRowBase를 통해 데이터테이블에서 사용가능
 {
