@@ -104,7 +104,7 @@ numToString.GenerateValueArray(values);
 - 정렬
 ```
 //KeySort, ValueSort
-numToString.KeySort([](int32 A, int32 B){ return A>B; });
+numToString.KeySort([](int32 A, int32 B){ return A > B; });
 numToSTring.ValueSort([](FString A, FString B){ return ...; });
 ```
 
